@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Project & Task Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **React + TypeScript + Node.js (Express) + MongoDB** web application for managing projects and tasks with user authentication, project/task creation, editing, deletion, and status tracking.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### User Authentication
+- **Register** new users.
+- **Login** existing users.
+- **Token-based authentication** using JWT.
+- **Access token and refresh token** flow:
+  - Access token stored in `localStorage`.
+  - Refresh token stored in cookies.
+  - When access token expires, `refreshAccessToken` endpoint issues a new access token using the refresh token.
+  - If refresh token is invalid or missing, user is redirected to login.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Projects
+- List all projects for the logged-in user.
+- **Create Project** from projects page.
+- **Edit Project** (title, description, status).
+- **Delete Projects** (single or multiple using checkboxes).
+- Projects table is sorted by creation date (newest first).
 
-## Expanding the ESLint configuration
+### Project Details
+- View project information including tasks.
+- **Add Task** to a project.
+- Task listing shows:
+  - Title
+  - Description
+  - Status (`todo`, `in-progress`, `done`)
+  - Due Date
+- Click on task to view and **edit task details** (status, description, due date).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Tasks
+- Create, edit, and delete tasks.
+- Task detail page allows updating:
+  - Title
+  - Description
+  - Status
+  - Due Date
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend
+- Built with **React + TypeScript + React Router v6**.
+- Handles route-based authentication.
+- Conditional rendering for login, selection, projects, and tasks pages.
+- Selection page after login allows user to choose whether to see projects or tasks first.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### API Handling
+- Axios instance with token headers.
+- Handles token expiration:
+  - If access token expires, `refreshAccessToken` endpoint is called.
+  - If refresh token is also expired or invalid, user is redirected to login.
+- Automatic redirection to login on unauthorized requests.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
